@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include "lexer.h"
 
 #define TOKEN_COUNT 3
 
@@ -19,17 +20,21 @@ void lex_file(char * file_name)
     rewind(fp);
 
 
-    while(i < char_count) {
-        char curr_token;
-        curr_token = (char)fgetc(fp);
-        if(is_md_token(&curr_token)) {
-            switch(curr_token) {
+    while(fgetc(fp) != EOF) {
+        char curr_token_char;
+        Token * curr_token;
+        curr_token_char = (char)fgetc(fp);
+        if(is_md_token(&curr_token_char)) {
+            switch(curr_token_char) {
                 case '#':
-
+                    curr_token = peekn(fp, '#');
                 case '=':
-
+                    curr_token = peekn(fp, '=');
                 case '-':
-                    break;
+                    curr_token = peekn(fp, '-');
+                default:
+                    curr_token->size = 1;
+                    curr_token->cargo = (char*)curr_token_char;
             }
         }
 
@@ -38,7 +43,7 @@ void lex_file(char * file_name)
     return;
 }
 
-bool is_md_token(char * token)
+bool is_md_token(char *token)
 {
     int i;
     for(i = 0; i < TOKEN_COUNT-1; ++i) {
@@ -47,6 +52,21 @@ bool is_md_token(char * token)
         }
     }
     return false;
+}
+
+Token * peekn(FILE * fp, char type)
+{
+    int i = 0;
+    char curr_tok;
+    char * token_acc;
+    Token * token;
+
+    while((curr_tok = (char)fgetc(fp)) == type) {
+        token_acc[i] = curr_tok;
+    }
+    token->cargo = token_acc;
+    token->size = sizeof(token_acc) / sizeof(char*);
+    return token;
 }
 
 
