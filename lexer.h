@@ -4,5 +4,5 @@ typedef struct token_t {
 } Token;
 
 void lex_file(char*);
-bool is_md_token(char*);
-Token * peekn(FILE*, char);
+char is_md_token(char);
+Token peekn(FILE*, char);
