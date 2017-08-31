@@ -3,7 +3,6 @@
 #include "lexer.h"
 
 void lex_file(char*);
-bool is_md_token(char*);
 
 int main(int argc, char *argv[])
 {
