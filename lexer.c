@@ -12,8 +12,9 @@
 #define IS_NON_MD_TOKEN  '\0'
 
 
-char is_md_token(char);
-int remaining_file_pointer_length(FILE *);
+static char is_md_token(char);
+static int remaining_file_pointer_length(FILE *);
+static char * peek_type(FILE*, char, char *);
 
 void lex_file(char * file_name)
 {
@@ -48,7 +49,7 @@ void lex_file(char * file_name)
     return;
 }
 
-char is_md_token(char token)
+static char is_md_token(char token)
 {
     int i;
     char * md_tokens = "#=-";
@@ -61,7 +62,7 @@ char is_md_token(char token)
     return IS_NON_MD_TOKEN;
 }
 
-int remaining_file_pointer_length(FILE * fp)
+static int remaining_file_pointer_length(FILE * fp)
 {
     long int current_file_pointer_position = ftell(fp);
     fseek(fp, current_file_pointer_position, SEEK_END);
@@ -70,7 +71,7 @@ int remaining_file_pointer_length(FILE * fp)
     return file_pointer_end_position - current_file_pointer_position;
 }
 
-char * peek_type(FILE * fp, char type, char * token_accumilator)
+static char * peek_type(FILE * fp, char type, char * token_accumilator)
 {
     int i = 1;
     token_accumilator[0] = type;
