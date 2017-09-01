@@ -15,12 +15,15 @@
 static char is_md_token(char);
 static int remaining_file_pointer_length(FILE *);
 static char * peek_type(FILE*, char, char *);
+static Lexer * new_lexer();
 
-void lex_file(char * file_name)
+
+Lexer * lex_file(char * file_name)
 {
     FILE *fp = fopen(file_name, "r");
     int current_char, j, i = 0;
     size_t char_count;
+    Lexer *lexer = new_lexer();
 
     fseek(fp, 0, SEEK_END);
     char_count = ftell(fp);
@@ -43,10 +46,18 @@ void lex_file(char * file_name)
             current_token.size  = 1;
             current_token.cargo += current_char;
         }
-        tokens[i] = current_token;
+        lexer->tokens[i] = current_token;
     }
 
-    return;
+    return lexer;
+}
+
+static Lexer * new_lexer()
+{
+    Lexer *lexer = malloc(sizeof(Lexer));
+    lexer->token_count = 0;
+
+    return lexer;
 }
 
 static char is_md_token(char token)

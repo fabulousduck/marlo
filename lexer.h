@@ -3,5 +3,10 @@ typedef struct token_t {
     char * cargo;
 } Token;
 
-void lex_file(char*);
+typedef struct lexer_t {
+    int token_count;
+    Token tokens[];
+} Lexer;
+
+Lexer * lex_file(char*);
 

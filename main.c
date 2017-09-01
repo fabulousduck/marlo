@@ -2,7 +2,6 @@
 #include <stdbool.h>
 #include "lexer.h"
 
-void lex_file(char*);
 
 int main(int argc, char *argv[])
 {
@@ -11,7 +10,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    lex_file(file_name);
+    Lexer *lexer = lex_file(file_name);
     return 1;
 }
 
