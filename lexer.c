@@ -73,7 +73,6 @@ int remaining_file_pointer_length(FILE * fp)
 char * peek_type(FILE * fp, char type, char * token_accumilator)
 {
     int i = 1;
-    int j;
     token_accumilator[0] = type;
     while((char)fgetc(fp) == type) {
         token_accumilator[i] = type;
