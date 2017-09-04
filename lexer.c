@@ -15,6 +15,7 @@
 static char is_md_token(char);
 static int remaining_file_pointer_length(FILE *);
 static char * peek_type(FILE*, char, char *);
+static char * peek_untill_symbol(FILE*, char, char *);
 static Lexer * new_lexer();
 
 
@@ -43,8 +44,11 @@ Lexer * lex_file(char * file_name)
             current_token.cargo = malloc(strlen(full_token_cargo)+1);
             strcpy(current_token.cargo, full_token_cargo);
         } else {
-            current_token.size  = 1;
-            current_token.cargo += current_char;
+            char char_accum[remaining_file_pointer_length(fp)];
+            char * full_token_cargo = peek_untill_symbol(fp, c, char_accum);
+            current_token.size = strlen(full_token_cargo);
+            current_token.cargo = malloc(strlen(full_token_cargo)+1);
+            strcpy(current_token.cargo, full_token_cargo);
         }
         lexer->tokens[i] = current_token;
     }
@@ -86,12 +90,25 @@ static char * peek_type(FILE * fp, char type, char * token_accumilator)
 {
     int i = 1;
     token_accumilator[0] = type;
+
     while((char)fgetc(fp) == type) {
         token_accumilator[i] = type;
         ++i;
     }
-    return token_accumilator;
 
+    return token_accumilator;
 }
 
+static char * peek_untill_symbol(FILE *fp, char base ,char * token_accumilator)
+{
+    int i = 1;
+    token_accumilator[0] = base;
+    char c;
+    while((is_md_token(c = (char)fgetc(fp))) != IS_NON_MD_TOKEN) {
+        token_accumilator[i] = c;
+        ++i;
+    }
+
+    return token_accumilator;
+}
 
