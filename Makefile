@@ -1,2 +1,2 @@
-makemarlo: main.c lexer.c
-	gcc main.c lexer.c
+makemarlo: main.c src/lexer.c
+	gcc main.c src/lexer.c

@@ -4,8 +4,8 @@ typedef struct token_t {
 } Token;
 
 typedef struct lexer_t {
-    int token_count;
-    Token tokens[];
+    size_t token_count;
+    Token *tokens[];
 } Lexer;
 
 Lexer * lex_file(char*);
