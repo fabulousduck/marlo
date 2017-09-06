@@ -35,7 +35,7 @@ Lexer * lex_file(char * file_name)
     while((current_char = fgetc(fp)) != EOF) {
 
         char c;
-        char * char_accum = malloc(remaining_file_pointer_length(fp) +1);
+        char * char_accum = malloc(remaining_file_pointer_length(fp));
         Token * token = new_token();
 
         if((c = is_md_token((char)current_char)) != IS_NON_MD_TOKEN) {
@@ -63,6 +63,8 @@ static Token * new_token()
     Token * token = malloc(sizeof(Token));
     token->size = sizeof(int);
     token->cargo = NULL;
+
+    return token;
 }
 
 static Lexer * new_lexer(size_t token_count)
@@ -98,16 +100,13 @@ static int remaining_file_pointer_length(FILE * fp)
 static char * peek_type(FILE * fp, char type, char * token_accumilator)
 {
     int i = 1;
-    char c = '*';
+    char c;
     token_accumilator[0] = type;
     while((c = (char)fgetc(fp)) == type) {
-
         token_accumilator[i] = type;
         ++i;
     }
-    fprintf(stderr, "%d\n", c);
     ungetc(c, fp);
-    fprintf(stderr, "%d\n", c);
     token_accumilator[i] = '\0';
 
     return token_accumilator;
@@ -119,9 +118,13 @@ static char * peek_chars(FILE * fp, char base_char, char * token_accumilator)
     token_accumilator[0] = base_char;
 
     while(IS_CHAR == 1) {
-        char c = (char)fgetc(fp);
+        int c = fgetc(fp);
+        if(c == EOF) {
+            printf("EOF");
+            break;
+        }
 
-        if(is_md_token(c) != IS_NON_MD_TOKEN) {
+        if(is_md_token((char)c) != IS_NON_MD_TOKEN) {
             IS_CHAR = 0;
             ungetc(c,fp);
         } else {
