@@ -35,19 +35,18 @@ Lexer * lex_file(char * file_name)
     while((current_char = fgetc(fp)) != EOF) {
 
         char c;
-        char * char_accum = malloc(remaining_file_pointer_length(fp));
+        char * char_accum = malloc(remaining_file_pointer_length(fp) +1);
         Token * token = new_token();
-
 
         if((c = is_md_token((char)current_char)) != IS_NON_MD_TOKEN) {
             peek_type(fp, c, char_accum);
         } else {
-           peek_chars(fp, current_char, char_accum);
+            peek_chars(fp, current_char, char_accum);
         }
 
-        token->size = strlen(char_accum);
+        token->size = strlen(char_accum) +1;
         token->cargo = malloc(token->size);
-        strncpy(token->cargo, char_accum, token->size);
+        memcpy(token->cargo, char_accum, token->size);
         lexer->tokens[token_count] = token;
 
         token_count += 1;
@@ -89,7 +88,7 @@ static char is_md_token(char token)
 static int remaining_file_pointer_length(FILE * fp)
 {
     long int current_file_pointer_position = ftell(fp);
-    fseek(fp, current_file_pointer_position, SEEK_END);
+    fseek(fp, 0, SEEK_END);
     long int file_pointer_end_position = ftell(fp);
     fseek(fp, current_file_pointer_position, SEEK_SET);
     return file_pointer_end_position - current_file_pointer_position;
@@ -99,12 +98,16 @@ static int remaining_file_pointer_length(FILE * fp)
 static char * peek_type(FILE * fp, char type, char * token_accumilator)
 {
     int i = 1;
+    char c = '*';
     token_accumilator[0] = type;
+    while((c = (char)fgetc(fp)) == type) {
 
-    while((char)fgetc(fp) == type) {
         token_accumilator[i] = type;
         ++i;
     }
+    fprintf(stderr, "%d\n", c);
+    ungetc(c, fp);
+    fprintf(stderr, "%d\n", c);
     token_accumilator[i] = '\0';
 
     return token_accumilator;
@@ -113,16 +116,14 @@ static char * peek_type(FILE * fp, char type, char * token_accumilator)
 static char * peek_chars(FILE * fp, char base_char, char * token_accumilator)
 {
     int i = 1, IS_CHAR = 1;
-    printf("----");
     token_accumilator[0] = base_char;
 
     while(IS_CHAR == 1) {
         char c = (char)fgetc(fp);
-        printf("%ld\n", ftell(fp));
+
         if(is_md_token(c) != IS_NON_MD_TOKEN) {
             IS_CHAR = 0;
-            int current_file_ptr_pos = ftell(fp);
-            //fseek(*fp,-1, SEEK_CUR);
+            ungetc(c,fp);
         } else {
             token_accumilator[i] = c;
             ++i;
