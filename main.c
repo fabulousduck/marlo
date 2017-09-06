@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     }
     printf("%ld\n", lexer->token_count);
     for(i = 0; i < lexer->token_count; ++i) {
+        printf("token_size %d\n", lexer->tokens[i]->size);
         printf("token: %s\n", lexer->tokens[i]->cargo);
     }
 

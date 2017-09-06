@@ -15,13 +15,14 @@
 static char is_md_token(char);
 static int remaining_file_pointer_length(FILE *);
 static char * peek_type(FILE*, char, char *);
+static char * peek_chars(FILE *, char, char *);
 static Token * new_token();
 static Lexer * new_lexer();
 
 
 Lexer * lex_file(char * file_name)
 {
-    FILE *fp = fopen(file_name, "r");
+    FILE *fp = fopen(file_name, "rb");
     int current_char;
     size_t char_count, token_count = 0;
 
@@ -35,24 +36,22 @@ Lexer * lex_file(char * file_name)
 
         char c;
         char * char_accum = malloc(remaining_file_pointer_length(fp));
-        Token *current_token = malloc(sizeof(Token));
+        Token * token = new_token();
+
 
         if((c = is_md_token((char)current_char)) != IS_NON_MD_TOKEN) {
-            Token * token = new_token(strlen(char_accum));
-
             peek_type(fp, c, char_accum);
-            token->size = strlen(char_accum);
-            token->cargo = malloc(current_token->size+1);
-            strncpy(token->cargo, char_accum, token->size);
-
-            lexer->tokens[token_count] = token;
-
-            token_count += 1;
-
         } else {
-
-
+           peek_chars(fp, current_char, char_accum);
         }
+
+        token->size = strlen(char_accum);
+        token->cargo = malloc(token->size);
+        strncpy(token->cargo, char_accum, token->size);
+        lexer->tokens[token_count] = token;
+
+        token_count += 1;
+
 
     }
 
@@ -106,8 +105,29 @@ static char * peek_type(FILE * fp, char type, char * token_accumilator)
         token_accumilator[i] = type;
         ++i;
     }
+    token_accumilator[i] = '\0';
 
     return token_accumilator;
 }
 
+static char * peek_chars(FILE * fp, char base_char, char * token_accumilator)
+{
+    int i = 1, IS_CHAR = 1;
+    printf("----");
+    token_accumilator[0] = base_char;
 
+    while(IS_CHAR == 1) {
+        char c = (char)fgetc(fp);
+        printf("%ld\n", ftell(fp));
+        if(is_md_token(c) != IS_NON_MD_TOKEN) {
+            IS_CHAR = 0;
+            int current_file_ptr_pos = ftell(fp);
+            //fseek(*fp,-1, SEEK_CUR);
+        } else {
+            token_accumilator[i] = c;
+            ++i;
+        }
+    }
+    token_accumilator[i] = '\0';
+    return token_accumilator;
+}
