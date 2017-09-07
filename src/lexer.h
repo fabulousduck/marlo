@@ -1,3 +1,5 @@
+#pragma once
+
 typedef struct token_t {
     int size;
     char * cargo;

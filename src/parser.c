@@ -8,10 +8,9 @@ static int heading_length(Token *);
 void parse(Lexer * lexer, char * input_file_name)
 {
     char file_string[lexer->token_count * sizeof(Token)];
-    int i;
     memset(file_string, 0, 100);
 
-    for(i = 0; i < lexer->token_count; ++i) {
+    for(int i = 0; i < lexer->token_count; ++i) {
         Token * token = lexer->tokens[i];
 
         char char_string[] = "char_string";
@@ -20,7 +19,7 @@ void parse(Lexer * lexer, char * input_file_name)
 
             if(strcmp(lexer->tokens[i-1]->type, "heading") == 0) {
                 int header_length= heading_length(lexer->tokens[i-1]);
-                char heading_string[strlen(token->cargo) + 4];
+                char heading_string[strlen(token->cargo) + 6];
                 sprintf(heading_string, "<h%d>%s\n", header_length, token->cargo);
                 strncat(file_string, heading_string, strlen(heading_string));
             }
@@ -36,7 +35,7 @@ void parse(Lexer * lexer, char * input_file_name)
     } else {
         perror("failed to create markdown file. Exiting");
     }
-       return;
+    return;
 }
 
 static int heading_length(Token * token)
