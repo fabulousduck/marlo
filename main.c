@@ -18,6 +18,10 @@ int main(int argc, char *argv[])
         printf("This tool can only be used in files!\n");
         return EXIT_FAILURE;
     }
+    if (!file_exists(file_name)) {
+        printf("The file '%s' does not exist\n", file_name);
+        return EXIT_FAILURE;
+    }
 
     // Ajust the extension of the file
     output_file = change_extension(file_name, ".html");
