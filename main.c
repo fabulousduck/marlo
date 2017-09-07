@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     }
 
     // Is the path directory?
-    if (`(file_name)) {
+    if (is_directory(file_name)) {
         printf("This tool can only be used in files!\n");
         return EXIT_FAILURE;
     }

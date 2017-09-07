@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 
-int is_regular_file(const char * path)
+int is_directory(const char * path)
 {
     struct stat statbuf;
     if (stat(path, &statbuf) != 0)

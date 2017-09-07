@@ -1,4 +1,4 @@
 #pragma once
 
-int is_regular_file(const char *);
+int is_directory(const char *);
 char* change_extension(char* const, char* const);
