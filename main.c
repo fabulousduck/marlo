@@ -14,13 +14,13 @@ int main(int argc, char *argv[])
     }
 
     // Is the path directory?
-    if (is_regular_file(file_name)) {
+    if (`(file_name)) {
         printf("This tool can only be used in files!\n");
         return EXIT_FAILURE;
     }
 
-    // Ajust the exstention of the file
-    output_file = changeExstension(file_name, ".html");
+    // Ajust the extension of the file
+    output_file = change_extension(file_name, ".html");
 
     Lexer *lexer = lex_file(file_name);
     parse(lexer, output_file);

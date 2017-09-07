@@ -13,7 +13,7 @@ int is_regular_file(const char * path)
     return S_ISDIR(statbuf.st_mode);
 }
 
-char* changeExstension(char* const filePath, char* const newEstension ) {
+char* change_extension(char* const filePath, char* const newEstension ) {
     char* dest;
  
     // We have some exstension?
