@@ -1,6 +1,7 @@
 typedef struct token_t {
     int size;
     char * cargo;
+    char * type;
 } Token;
 
 typedef struct lexer_t {

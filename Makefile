@@ -1,2 +1,2 @@
-makemarlo: main.c src/lexer.c
-	gcc main.c src/lexer.c -g
+makemarlo: main.c src/lexer.c src/parser.c
+	gcc main.c src/lexer.c src/parser.c -g -Wall
