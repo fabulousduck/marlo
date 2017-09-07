@@ -1,1 +1,1 @@
-void parse(Lexer *);
+void parse(Lexer *, char *);

@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     int i;
     Lexer *lexer = lex_file(file_name);
-    parse(lexer);
+    parse(lexer, file_name);
 
 
 
