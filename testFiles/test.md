@@ -4,3 +4,8 @@
 
 ## smaller title
 -----
+
+**a cool bold thing**
+*a cool italic thing*
+
+**cobined *coolness* in here**

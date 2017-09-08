@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include "lexer.h"
+
+#define STAR_PARSING 0
+#define UNDERSCORE_PARSING 1
+#define TILDE_PARSING 2
 
 static int heading_length(Token *);
 
@@ -9,6 +14,7 @@ void parse(Lexer * lexer, char * input_file_name)
 {
     size_t length = lexer->token_count * sizeof(Token);
     char file_string[length];
+    int parse_active_table[3];
     memset(file_string, 0, length);
 
     for(int i = 0; i < lexer->token_count; ++i) {
@@ -23,6 +29,23 @@ void parse(Lexer * lexer, char * input_file_name)
             }
         } else if(strcmp(token->type, "blank_line") == 0) {
             strncat(file_string, "<br>\n", 5);
+        } else if(strcmp(token->type, "star") == 0) {
+            int star_length = strlen(token->cargo);
+            if(parse_active_table[STAR_PARSING] == STAR_PARSING) {
+                switch(star_length) {
+                    case 1:
+                        strncat(file_string, "</i>", 4);
+                    case 2:
+                        strncat(file_string, "</b>", 4);
+                }
+            } else {
+                switch(star_length) {
+                    case 1:
+                        strncat(file_string, "<i>", 3);
+                    case 2:
+                        strncat(file_string, "<b>", 3);
+                }
+            }
         }
     }
 
@@ -40,3 +63,4 @@ static int heading_length(Token * token)
 {
     return strlen(token->cargo);
 }
+

@@ -92,6 +92,8 @@ static char * determine_token_type(char sample)
         case '=':
             type = "blank_line";
             break;
+        case '*':
+            type = "star";
     }
     return type;
 }
