@@ -28,7 +28,6 @@ int main(int argc, char *argv[])
 
     Lexer *lexer = lex_file(file_name);
     parse(lexer, output_file);
-    free(output_file);
 
     return EXIT_SUCCESS;
 }
