@@ -6,3 +6,5 @@
 -----
 
 **a cool bold thing**
+*a cool italic thing*
+**cool things *mixed* together**

@@ -19,7 +19,6 @@ void parse(Lexer * lexer, char * input_file_name)
 
     for(int i = 0; i < lexer->token_count; ++i) {
         Token * token = lexer->tokens[i];
-        printf("token type : %s\n", token->type);
         if(strcmp(token->type, "char_string") == 0) {
             if(strcmp(lexer->tokens[i - 1]->type, "heading") == 0) {
                 int header_length = heading_length(lexer->tokens[i - 1]);
@@ -27,7 +26,7 @@ void parse(Lexer * lexer, char * input_file_name)
                 sprintf(heading_string, "<h%d>%s\n", header_length, token->cargo);
                 strncat(file_string, heading_string, strlen(heading_string));
             } else {
-                strncat(file_string, token->cargo, strlen(token->cargo));
+                strncat(file_string, token->cargo, strlen(token->cargo) +1);
             }
         } else if(strcmp(token->type, "blank_line") == 0) {
             strncat(file_string, "<br>\n", 5);
@@ -37,15 +36,20 @@ void parse(Lexer * lexer, char * input_file_name)
                 switch(star_length) {
                     case 1:
                         strncat(file_string, "</i>", 4);
+                        break;
                     case 2:
                         strncat(file_string, "</b>", 4);
+                        break;
                 }
             } else {
+                parse_active_table[STAR_PARSING] = STAR_PARSING;
                 switch(star_length) {
                     case 1:
                         strncat(file_string, "<i>", 3);
+                        break;
                     case 2:
                         strncat(file_string, "<b>", 3);
+                        break;
                 }
             }
         }
