@@ -15,6 +15,7 @@ $ make
 - [ ] generate html
   - [x] blank lines (`===`,`---`)
   - [x] headings (`#`)
-  - [ ] bold (`** x **`)
-  - [ ] italic (`*** x ***`)
+  - [x] bold (`** x **`)
+  - [x] italic (`*** x ***`)
+  - [ ] code (``` ` ```);
   - [ ] tables (`---|---|---`)
