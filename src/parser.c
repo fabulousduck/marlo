@@ -19,13 +19,15 @@ void parse(Lexer * lexer, char * input_file_name)
 
     for(int i = 0; i < lexer->token_count; ++i) {
         Token * token = lexer->tokens[i];
-
+        printf("token type : %s\n", token->type);
         if(strcmp(token->type, "char_string") == 0) {
             if(strcmp(lexer->tokens[i - 1]->type, "heading") == 0) {
                 int header_length = heading_length(lexer->tokens[i - 1]);
                 char heading_string[strlen(token->cargo) + 5];
                 sprintf(heading_string, "<h%d>%s\n", header_length, token->cargo);
                 strncat(file_string, heading_string, strlen(heading_string));
+            } else {
+                strncat(file_string, token->cargo, strlen(token->cargo));
             }
         } else if(strcmp(token->type, "blank_line") == 0) {
             strncat(file_string, "<br>\n", 5);

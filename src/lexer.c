@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include "lexer.h"
 
-#define TOKEN_DEF_COUNT 3
-
 //something people wont use in their .md files
 //which we can use to return if a token is not
 //a token we should do something special with
@@ -94,6 +92,7 @@ static char * determine_token_type(char sample)
             break;
         case '*':
             type = "star";
+            break;
     }
     return type;
 }
@@ -101,9 +100,9 @@ static char * determine_token_type(char sample)
 static char is_md_token(char token)
 {
     int i;
-    char * md_tokens = "#=-";
+    char * md_tokens = "#=-*";
 
-    for(i = 0; i < TOKEN_DEF_COUNT; ++i) {
+    for(i = 0; i < strlen(md_tokens); ++i) {
         if(token == md_tokens[i]) {
             return md_tokens[i];
         }
