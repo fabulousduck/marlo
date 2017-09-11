@@ -7,33 +7,46 @@
 #define STAR_PARSING 0
 #define UNDERSCORE_PARSING 1
 #define TILDE_PARSING 2
+#define HASH_PARSING 3
 
 static int heading_length(Token *);
 static char * parse_star(Token *, int);
-
 
 void parse(Lexer * lexer, char * input_file_name)
 {
     size_t length = lexer->token_count * sizeof(Token);
     char file_string[length];
-    int parse_active_table[3];
+    int parse_active_table[4];
+    int current_parse_heading_length;
     memset(file_string, 0, length);
 
     for(int i = 0; i < lexer->token_count; ++i) {
         Token * token = lexer->tokens[i];
         if(strcmp(token->type, "char_string") == 0) {
-            if(strcmp(lexer->tokens[i - 1]->type, "heading") == 0) {
-                int header_length = heading_length(lexer->tokens[i - 1]);
-                char heading_string[strlen(token->cargo) + 5];
-                sprintf(heading_string, "<h%d>%s\n", header_length, token->cargo);
-                strncat(file_string, heading_string, strlen(heading_string));
-            } else {
-                strncat(file_string, token->cargo, strlen(token->cargo) +1);
-            }
+
+            strncat(file_string, token->cargo, strlen(token->cargo) +1);
+
         } else if(strcmp(token->type, "blank_line") == 0) {
-            strncat(file_string, "<br>\n", 5);
+
+            char tag[10];
+            if(parse_active_table[HASH_PARSING] == HASH_PARSING) {
+                sprintf(tag, "</h%d>", current_parse_heading_length);
+            }
+            strncat(tag, "<br>\n", 5);
+            strncat(file_string, tag, strlen(tag) +1);
+        } else if(strcmp(token->type, "heading") == 0) {
+
+            char tag[5];
+            int header_length = heading_length(token);
+
+            sprintf(tag, "<h%d>", header_length);
+            parse_active_table[HASH_PARSING] = HASH_PARSING;
+            strncat(file_string, tag, strlen(tag) +1);
+            current_parse_heading_length = header_length;
+
         } else if(strcmp(token->type, "star") == 0) {
             char * tag;
+
             if(parse_active_table[STAR_PARSING] == STAR_PARSING) {
 
                 tag = parse_star(token, 1);
@@ -71,7 +84,6 @@ static int heading_length(Token * token)
 {
     return strlen(token->cargo);
 }
-
 
 static char * parse_star(Token * token, int is_closing_tag)
 {
