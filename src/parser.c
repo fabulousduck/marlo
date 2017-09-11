@@ -9,6 +9,8 @@
 #define TILDE_PARSING 2
 
 static int heading_length(Token *);
+static char * parse_star(Token *, int);
+
 
 void parse(Lexer * lexer, char * input_file_name)
 {
@@ -31,26 +33,26 @@ void parse(Lexer * lexer, char * input_file_name)
         } else if(strcmp(token->type, "blank_line") == 0) {
             strncat(file_string, "<br>\n", 5);
         } else if(strcmp(token->type, "star") == 0) {
-            int star_length = strlen(token->cargo);
+            char * tag;
             if(parse_active_table[STAR_PARSING] == STAR_PARSING) {
-                switch(star_length) {
-                    case 1:
-                        strncat(file_string, "</i>", 4);
-                        break;
-                    case 2:
-                        strncat(file_string, "</b>", 4);
-                        break;
-                }
+
+                tag = parse_star(token, 1);
+                strncat(file_string, tag, strlen(tag) +1);
+                parse_active_table[STAR_PARSING] = -1;
+
             } else {
+
+                tag = parse_star(token, 0);
+                strncat(file_string, tag, strlen(tag) +1);
                 parse_active_table[STAR_PARSING] = STAR_PARSING;
-                switch(star_length) {
-                    case 1:
-                        strncat(file_string, "<i>", 3);
-                        break;
-                    case 2:
-                        strncat(file_string, "<b>", 3);
-                        break;
-                }
+
+            }
+        } else if(strcmp(token->type, "tilde") == 0) {
+
+            if(parse_active_table[TILDE_PARSING] == TILDE_PARSING) {
+                strncat(file_string, "</code>", 7);
+            } else {
+                strncat(file_string, "<code>", 6);
             }
         }
     }
@@ -70,3 +72,31 @@ static int heading_length(Token * token)
     return strlen(token->cargo);
 }
 
+
+static char * parse_star(Token * token, int is_closing_tag)
+{
+    int star_length = strlen(token->cargo);
+    char * tag = malloc(5);
+    if(is_closing_tag == 1) {
+        switch(star_length) {
+            case 1:
+                tag = "</i>";
+                break;
+            case 2:
+                tag = "</b>";
+                break;
+            }
+    } else {
+        switch(star_length) {
+            case 1:
+            tag = "<i>";
+            break;
+        case 2:
+            tag = "<b>";
+            break;
+        }
+    }
+
+    return tag;
+
+}

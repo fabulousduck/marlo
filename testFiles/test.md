@@ -8,3 +8,10 @@
 **a cool bold thing**
 *a cool italic thing*
 **cool things *mixed* together**
+
+
+```
+   int main() {
+        return 0;
+    }
+```

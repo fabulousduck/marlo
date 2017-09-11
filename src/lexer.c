@@ -93,6 +93,9 @@ static char * determine_token_type(char sample)
         case '*':
             type = "star";
             break;
+        case '`':
+            type = "tilde";
+            break;
     }
     return type;
 }
@@ -100,11 +103,16 @@ static char * determine_token_type(char sample)
 static char is_md_token(char token)
 {
     int i;
-    char * md_tokens = "#=-*";
+    md_token md_tokens[4] = {
+        {'='},
+        {'*'},
+        {'-'},
+        {'#'},
+    };
 
-    for(i = 0; i < strlen(md_tokens); ++i) {
-        if(token == md_tokens[i]) {
-            return md_tokens[i];
+    for(i = 0; i < (sizeof(md_tokens)/sizeof(md_token)); ++i) {
+        if(token == md_tokens[i].md_token_char) {
+            return md_tokens[i].md_token_char;
         }
     }
     return IS_NON_MD_TOKEN;
