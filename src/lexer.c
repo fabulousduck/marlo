@@ -54,8 +54,6 @@ Lexer * lex_file(char * file_name)
         lexer->tokens[token_count] = token;
 
         token_count += 1;
-
-
     }
 
     lexer->token_count = token_count;
@@ -78,10 +76,10 @@ static Lexer * new_lexer(size_t token_count)
     return lexer;
 }
 
+
 static char * determine_token_type(char sample)
 {
     char * type;
-
     switch(sample) {
         case '#':
             type = "heading";
@@ -103,7 +101,7 @@ static char * determine_token_type(char sample)
 static char is_md_token(char token)
 {
     int i;
-    md_token md_tokens[4] = {
+    md_token md_tokens[5] = {
         {'='},
         {'*'},
         {'-'},

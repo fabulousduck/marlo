@@ -17,11 +17,11 @@ void parse(Lexer * lexer, char * input_file_name)
     size_t length = lexer->token_count * sizeof(Token);
     char file_string[length];
     int parse_active_table[4];
-    int current_parse_heading_length;
     memset(file_string, 0, length);
 
     for(int i = 0; i < lexer->token_count; ++i) {
         Token * token = lexer->tokens[i];
+        //printf("> %s\n", token->type);
         if(strcmp(token->type, "char_string") == 0) {
 
             strncat(file_string, token->cargo, strlen(token->cargo) +1);
@@ -29,20 +29,15 @@ void parse(Lexer * lexer, char * input_file_name)
         } else if(strcmp(token->type, "blank_line") == 0) {
 
             char tag[10];
-            if(parse_active_table[HASH_PARSING] == HASH_PARSING) {
-                sprintf(tag, "</h%d>", current_parse_heading_length);
-            }
-            strncat(tag, "<br>\n", 5);
+                       strncat(tag, "<br>\n", 5);
             strncat(file_string, tag, strlen(tag) +1);
         } else if(strcmp(token->type, "heading") == 0) {
 
             char tag[5];
             int header_length = heading_length(token);
-
             sprintf(tag, "<h%d>", header_length);
             parse_active_table[HASH_PARSING] = HASH_PARSING;
             strncat(file_string, tag, strlen(tag) +1);
-            current_parse_heading_length = header_length;
 
         } else if(strcmp(token->type, "star") == 0) {
             char * tag;

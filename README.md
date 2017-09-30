@@ -19,3 +19,8 @@ $ make
   - [x] italic (`*** x ***`)
   - [ ] code (``` ` ```);
   - [ ] tables (`---|---|---`)
+
+- [ ] code things
+    - [ ] fix bug where heading tags are not closed
+    - [ ] add code for parsing commands than need to be more than one
+          char long
